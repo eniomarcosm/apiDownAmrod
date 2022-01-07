@@ -1,0 +1,36 @@
+<Product>
+    <ItemCode>ALT-FHC</ItemCode>
+    <Name>Marriot Polycotton Housecoat</Name>
+    <Description>Fran Polycotton Housecoat</Description>
+    <Price>124.79</Price>
+    <Flags>0</Flags>
+    <SimpleCode>ALT-FHC</SimpleCode>
+    <ProductId>90112</ProductId>
+    <IsSet/>
+    <Colour>ribbon purple-light</Colour>
+    <IsComponentSet>false</IsComponentSet>
+    <Behavior>0</Behavior>
+    <InStock>true</InStock>
+    <Image>https://productcatalogue2020.s3.amazonaws.com/ALT-FHC_default.jpg</Image>
+    <Cateories>Housecoats</Cateories>
+    <Status>publish</Status>
+    <VariationEnabled>yes</VariationEnabled>
+</Product>
+<Product>
+    <ItemCode>ALT-COJ</ItemCode>
+    <Name>Mens Colorado Jacket</Name>
+    <Description>Lightly padded bomber jacket, elastic ribbing on hem and cuffs, slanted zipped pockets, trendy top-stitching detail. &lt;br /&gt;&lt;br /&gt;100% polyester outer&lt;br /&gt;&lt;br /&gt;210T polyester lining&lt;br /&gt;&lt;br /&gt;polyester wadding&lt;br /&gt;Sizes: Unisex: (XS - 5XL)</Description>
+    <Price>412.79</Price>
+    <Flags>0</Flags>
+    <SimpleCode>ALT-COJ</SimpleCode>
+    <ProductId>89966</ProductId>
+    <IsSet/>
+    <Colour/>
+    <IsComponentSet>false</IsComponentSet>
+    <Behavior>0</Behavior>
+    <InStock>true</InStock>
+    <Image>https://productcatalogue2020.s3.amazonaws.com/ALT-COJ_default.jpg</Image>
+    <Cateories>Jackets</Cateories>
+    <Status>publish</Status>
+    <VariationEnabled>yes</VariationEnabled>
+</Product>
