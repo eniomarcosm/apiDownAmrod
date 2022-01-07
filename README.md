@@ -2,7 +2,7 @@
 
 ---
 
-author: [Enio Marcos](https://github.com/eniomarcosm)
+Author: [Enio Marcos](https://github.com/eniomarcosm)
 
 ---
 
