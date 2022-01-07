@@ -3,7 +3,6 @@
 ---
 
 author: [Enio Marcos](https://github.com/eniomarcosm)
-date: @
 
 ---
 
