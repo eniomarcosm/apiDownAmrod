@@ -2,8 +2,7 @@
 
 ---
 
-author: [Enio Marcos](https://github.com/eniomarcosm)
-date: @
+Author: [Enio Marcos](https://github.com/eniomarcosm)
 
 ---
 

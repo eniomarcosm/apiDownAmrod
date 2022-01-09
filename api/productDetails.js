@@ -6,10 +6,11 @@ const getProductDetails = async (productId) => {
   let response;
   try {
     response = await client.post(endpoint, { productId: productId });
-    return response.data.Body;
   } catch (error) {
     console.error(error);
   }
+
+  return response.data.Body;
 };
 
 exports.getProductDetails = getProductDetails;

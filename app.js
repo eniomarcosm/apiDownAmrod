@@ -27,42 +27,51 @@ const generateJson = (data) => {
 };
 
 const writeXML = () => {
-  var options = { compact: true, ignoreComment: true, spaces: 4 };
-  var xml = convert.json2xml(finalJson, options);
-  var path = "./temp/amrod.xml";
-  fs.writeFileSync(path, xml);
-};
-
-// let cont = 0;
-const iterateCategory = (categories) => {
-  categories.forEach(async (category, index) => {
-    if (category.CategoryId) {
-      categoryProducts(category);
-      console.log(
-        "Read category: ",
-        // ++cont,
-        "Category ID: ",
-        category.CategoryId
-      );
-    }
-    if (category.SubCategories) iterateCategory(category.SubCategories);
-  });
-};
-
-const categoryProducts = async (category) => {
   try {
-    const response = await getCategoryProducts(category.CategoryId);
-    response.Products.forEach(async (product) => {
-      productDetails(product, category);
-    });
-  } catch (err) {
-    console.error(err);
+    var options = { compact: true, ignoreComment: true, spaces: 4 };
+    var xml = convert.json2xml(finalJson, options);
+    var path = "./temp/amrod.xml";
+    fs.writeFileSync(path, xml);
+  } catch (error) {
+    console.error(error);
   }
 };
 
-const productDetails = async (product, category) => {
+let cont = 0;
+const iterateCategory = async (categories) => {
+  for (const category of categories) {
+    // categories.forEach(async (category) => {
+    if (category.CategoryId) {
+      await categoryProducts(category);
+      // console.log(
+      //   "Read category: ",
+      //   ++cont,
+      //   "Category ID: ",
+      //   category.CategoryId
+      // );
+    }
+    if (category.SubCategories) iterateCategory(category.SubCategories);
+  }
+};
+
+const categoryProducts = async (category) => {
+  let response;
   try {
-    const details = await getProductDetails(product.ProductId);
+    response = await getCategoryProducts(category.CategoryId);
+    for (const product of response.Products) {
+      // response.Products.forEach(async (product) => {
+      await productDetails(product, category);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+  return response;
+};
+
+const productDetails = async (product, category) => {
+  let details;
+  try {
+    details = await getProductDetails(product.ProductId);
     if (details) {
       generateJson({
         ItemCode: product.ProductCode,
@@ -83,17 +92,18 @@ const productDetails = async (product, category) => {
         VariationEnabled: "yes",
       });
     }
-    return details;
   } catch (error) {
     console.error(error);
   }
-  return;
+  return details;
 };
 
 const generateAttributes = async () => {
   try {
     const { Categories } = await getCategoryTree();
-    iterateCategory(Categories);
+    await iterateCategory(Categories);
+    writeXML();
+    console.log("!!!!!!!!SUCESS!!!!!");
   } catch (error) {
     console.error(error);
   }

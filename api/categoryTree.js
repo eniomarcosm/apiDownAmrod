@@ -6,11 +6,10 @@ const getCategoryTree = async () => {
   let response;
   try {
     response = await client.post(endpoint);
-    return response.data.Body;
   } catch (error) {
     console.error(error);
   }
-  return;
+  return response.data.Body;
 };
 
 exports.getCategoryTree = getCategoryTree;

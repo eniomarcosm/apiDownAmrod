@@ -1,36 +1,56 @@
-<Product>
-    <ItemCode>ALT-FHC</ItemCode>
-    <Name>Marriot Polycotton Housecoat</Name>
-    <Description>Fran Polycotton Housecoat</Description>
-    <Price>124.79</Price>
-    <Flags>0</Flags>
-    <SimpleCode>ALT-FHC</SimpleCode>
-    <ProductId>90112</ProductId>
-    <IsSet/>
-    <Colour>ribbon purple-light</Colour>
-    <IsComponentSet>false</IsComponentSet>
-    <Behavior>0</Behavior>
-    <InStock>true</InStock>
-    <Image>https://productcatalogue2020.s3.amazonaws.com/ALT-FHC_default.jpg</Image>
-    <Cateories>Housecoats</Cateories>
-    <Status>publish</Status>
-    <VariationEnabled>yes</VariationEnabled>
-</Product>
-<Product>
-    <ItemCode>ALT-COJ</ItemCode>
-    <Name>Mens Colorado Jacket</Name>
-    <Description>Lightly padded bomber jacket, elastic ribbing on hem and cuffs, slanted zipped pockets, trendy top-stitching detail. &lt;br /&gt;&lt;br /&gt;100% polyester outer&lt;br /&gt;&lt;br /&gt;210T polyester lining&lt;br /&gt;&lt;br /&gt;polyester wadding&lt;br /&gt;Sizes: Unisex: (XS - 5XL)</Description>
-    <Price>412.79</Price>
-    <Flags>0</Flags>
-    <SimpleCode>ALT-COJ</SimpleCode>
-    <ProductId>89966</ProductId>
-    <IsSet/>
-    <Colour/>
-    <IsComponentSet>false</IsComponentSet>
-    <Behavior>0</Behavior>
-    <InStock>true</InStock>
-    <Image>https://productcatalogue2020.s3.amazonaws.com/ALT-COJ_default.jpg</Image>
-    <Cateories>Jackets</Cateories>
-    <Status>publish</Status>
-    <VariationEnabled>yes</VariationEnabled>
-</Product>
+<DocumentElement>
+    <Product>
+        <ItemCode>IDEA-0401</ItemCode>
+        <Name>Basix Eraser</Name>
+        <Description>&lt;ul&gt;&lt;br /&gt;&lt;li&gt;size: 2.8 ( l ) x 2.2 ( w ) x 0.5 ( h )&lt;/li&gt;&lt;br /&gt;&lt;li&gt;material: synthetic rubber&lt;/li&gt;&lt;br /&gt;&lt;/ul&gt;</Description>
+        <Price>0.66</Price>
+        <Flags>0</Flags>
+        <SimpleCode>IDEA-0401</SimpleCode>
+        <ProductId>25729</ProductId>
+        <IsSet>null</IsSet>
+        <Colour/>
+        <IsComponentSet>false</IsComponentSet>
+        <Behavior>0</Behavior>
+        <InStock>true</InStock>
+        <Image>https://productcatalogue2015.s3.amazonaws.com/IDEA-0401_default.jpg</Image>
+        <Cateories>Altitude Gifts</Cateories>
+        <Status>publish</Status>
+        <VariationEnabled>yes</VariationEnabled>
+    </Product>
+    <Product>
+        <ItemCode>HWB-9997-SW</ItemCode>
+        <Name>Swiss Cougar Oxford Infrared Thermometer - Solid White Only</Name>
+        <Description>&lt;p&gt;Normal body temperature is considered to be between 36.5&amp;nbsp;&amp;deg;C &amp;ndash; 37.5&amp;nbsp;&amp;deg;C and having a temperature above&amp;nbsp;37,5 &amp;deg;C is a good indication that your body might be fighting an infection. These&amp;nbsp;accurate, non-touch thermometers act as an ideal first line of defence for any workplace and will allow you to screen all staff and customers in a safe and convenient way. Measures temperatures between a range of between 32 &amp;ndash; 43 degrees Celsius, with a maximum accuracy variance of 0.2 degrees Celsius.&lt;/p&gt;&lt;br /&gt;&lt;ul&gt;&lt;br /&gt;&lt;li&gt;ABS &amp; PCB 15 ( l ) x 10 ( w ) x 5 ( h )&lt;/li&gt;&lt;br /&gt;&lt;li&gt;Measuring distance: 3 &amp;ndash; 5cm.&lt;/li&gt;&lt;br /&gt;&lt;li&gt;Measuring time: 1 second.&lt;/li&gt;&lt;br /&gt;&lt;li&gt;Digital screen display.&lt;/li&gt;&lt;br /&gt;&lt;li&gt;Automatic shutdown after 1 minute.&lt;/li&gt;&lt;br /&gt;&lt;li&gt;Simple and practical to operate: one-button measurement; one-button conversion mode; one-button search.&lt;/li&gt;&lt;br /&gt;&lt;li&gt;Light warning: green, yellow and red backlights indicate whether the body temperature is normal, low fever or high fever.&lt;/li&gt;&lt;br /&gt;&lt;li&gt;Multi-group memory: Unit can store up to 50 sets of measurements for analysis and comparison.&lt;/li&gt;&lt;br /&gt;&lt;li&gt;Requires 2 x AAA alkaline batteries (batteries not included)&lt;/li&gt;&lt;br /&gt;&lt;/ul&gt;&lt;br /&gt;&lt;p&gt;&amp;nbsp;&lt;em&gt;As registration of this device with the South African Health Products Regulatory Authority (SAHPRA) is still pending, it cannot be sold as a medical device. This model is FDA accredited, and is sold within the USA as a medical device.&lt;/em&gt;&lt;/p&gt;</Description>
+        <Price>349.99</Price>
+        <Flags>0</Flags>
+        <SimpleCode>HWB-9997-SW</SimpleCode>
+        <ProductId>109923</ProductId>
+        <IsSet>null</IsSet>
+        <Colour>ribbon one-price</Colour>
+        <IsComponentSet>false</IsComponentSet>
+        <Behavior>0</Behavior>
+        <InStock>true</InStock>
+        <Image>https://productcatalogue2015.s3.amazonaws.com/HWB-9997-SW_default.jpg</Image>
+        <Cateories>Specials</Cateories>
+        <Status>publish</Status>
+        <VariationEnabled>yes</VariationEnabled>
+    </Product>
+    <Product>
+        <ItemCode>ALT-LND</ItemCode>
+        <Name>Mens Lando Body Warmer</Name>
+        <Description>Take your look to a whole new level with this modern lightweight puffer body warmer which has a fully padded quilt. The details include a full zip with chin protector, front panels with welt pockets and a curved back hem to complete the look.&lt;br /&gt;Sizes: Unisex (XS-5XL)</Description>
+        <Price>297.59</Price>
+        <Flags>0</Flags>
+        <SimpleCode>ALT-LND</SimpleCode>
+        <ProductId>90196</ProductId>
+        <IsSet>null</IsSet>
+        <Colour/>
+        <IsComponentSet>false</IsComponentSet>
+        <Behavior>0</Behavior>
+        <InStock>true</InStock>
+        <Image>https://productcatalogue2020.s3.amazonaws.com/ALT-LND_default.jpg</Image>
+        <Cateories>Bodywarmers</Cateories>
+        <Status>publish</Status>
+        <VariationEnabled>yes</VariationEnabled>
+    </Product>
+</DocumentElement>

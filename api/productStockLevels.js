@@ -7,9 +7,8 @@ const getProductStockLevels = async (itemCode) => {
   let response;
   try {
     response = await client.post(endpoint, { itemCode: itemCode });
-    return response.data.Body;
   } catch (error) {}
-  return;
+  return response.data.Body;
 };
 
 exports.getProductStockLevels = getProductStockLevels;

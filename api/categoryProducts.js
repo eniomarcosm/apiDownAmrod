@@ -8,11 +8,10 @@ const getCategoryProducts = async (categoryId) => {
     response = await client.post(endpoint, {
       categoryId: categoryId,
     });
-    return response.data.Body;
   } catch (error) {
     console.error(error);
   }
-  return;
+  return response.data.Body;
 };
 
 exports.getCategoryProducts = getCategoryProducts;
