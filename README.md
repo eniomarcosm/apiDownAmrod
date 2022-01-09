@@ -15,5 +15,5 @@ Author: [Enio Marcos](https://github.com/eniomarcosm)
 ## Error Handling
 
 After running the command listed above verify the log on the console/terminal.
--If it return SUCCESS just verify the created file on the ./temp folder.
--If it returns FAILURE or error on running process just contact the code owner. :octocat:
+- If it return SUCCESS just verify the created file on the ./temp folder.
+- If it returns FAILURE or error on running process just contact the code owner. :octocat:
