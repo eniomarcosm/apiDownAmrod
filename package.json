@@ -1,5 +1,5 @@
 {
-  "name": "apiDown",
+  "name": "apidownloader",
   "version": "1.0.0",
   "description": "Amrod Api Downloader",
   "main": "app.js",
@@ -10,9 +10,14 @@
     "apisauce": "^2.1.5",
     "axios": "^0.24.0",
     "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
     "express": "^4.17.2",
-    "nodemon": "^2.0.15",
     "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "dotenv": "^12.0.4"
+  },
+  "scripts": {
+    "start": "nodemon app.js"
   }
 }

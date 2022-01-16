@@ -1,14 +1,15 @@
+require("dotenv/config");
 const apisauce = require("apisauce");
-const dotenv = require("dotenv");
-dotenv.config();
 
 const client = apisauce.create({
   baseUrl: "https://www.amrod.co.za",
+
   headers: {
-    Authorization: process.env.AUTHORIZATION,
-    "Content-Type": "application/json",
+    Authorization: process.env.AUTHORIZATTION,
     "X-AMROD-IMPERSONATE": process.env.IMPERSONATE,
+    "Content-Type": "application/json",
   },
 });
+console.log(client.headers);
 
 module.exports = client;

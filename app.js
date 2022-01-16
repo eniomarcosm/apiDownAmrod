@@ -20,11 +20,18 @@ let finalJson = {
 const generateJson = (data) => {
   try {
     finalJson.DocumentElement.Product.push(data);
+    writeXML();
     console.log(finalJson);
   } catch (err) {
     console.error(err);
   }
 };
+
+// const addToJson = (data) => {
+//   finalJson.DocumentElement.Product.push(data);
+//   console.log(finalJson);
+//   writeXML();
+// };
 
 const writeXML = () => {
   try {
@@ -40,15 +47,8 @@ const writeXML = () => {
 let cont = 0;
 const iterateCategory = async (categories) => {
   for (const category of categories) {
-    // categories.forEach(async (category) => {
     if (category.CategoryId) {
       await categoryProducts(category);
-      // console.log(
-      //   "Read category: ",
-      //   ++cont,
-      //   "Category ID: ",
-      //   category.CategoryId
-      // );
     }
     if (category.SubCategories) iterateCategory(category.SubCategories);
   }
@@ -59,7 +59,6 @@ const categoryProducts = async (category) => {
   try {
     response = await getCategoryProducts(category.CategoryId);
     for (const product of response.Products) {
-      // response.Products.forEach(async (product) => {
       await productDetails(product, category);
     }
   } catch (err) {
@@ -74,22 +73,8 @@ const productDetails = async (product, category) => {
     details = await getProductDetails(product.ProductId);
     if (details) {
       generateJson({
-        ItemCode: product.ProductCode,
-        Name: product.ProductName,
-        Description: details.ProductDescription,
-        Price: product.Price,
-        Flags: 0,
-        SimpleCode: product.ProductCode,
-        ProductId: product.ProductId,
-        IsSet: "null",
-        Colour: details.PromotionStyle,
-        IsComponentSet: false,
-        Behavior: details.Behavior,
-        InStock: true,
-        Image: product.ImageUrlXL,
-        Cateories: category.CategoryName,
-        Status: "publish",
-        VariationEnabled: "yes",
+        Category: category,
+        ProductDetails: details,
       });
     }
   } catch (error) {
@@ -101,9 +86,10 @@ const productDetails = async (product, category) => {
 const generateAttributes = async () => {
   try {
     const { Categories } = await getCategoryTree();
-    await iterateCategory(Categories);
-    writeXML();
-    console.log("!!!!!!!!SUCESS!!!!!");
+
+    // await iterateCategory(Categories);
+    // writeXML();
+    console.log(Categories);
   } catch (error) {
     console.error(error);
   }
