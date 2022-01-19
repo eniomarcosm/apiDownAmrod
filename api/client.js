@@ -10,6 +10,5 @@ const client = apisauce.create({
     "Content-Type": "application/json",
   },
 });
-console.log(client.headers);
 
 module.exports = client;

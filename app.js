@@ -16,12 +16,13 @@ let finalJson = {
     Product: [],
   },
 };
+let cont = 0;
 
 const generateJson = (data) => {
   try {
     finalJson.DocumentElement.Product.push(data);
     writeXML();
-    console.log(finalJson);
+    console.log(cont++);
   } catch (err) {
     console.error(err);
   }
@@ -44,7 +45,6 @@ const writeXML = () => {
   }
 };
 
-let cont = 0;
 const iterateCategory = async (categories) => {
   for (const category of categories) {
     if (category.CategoryId) {
@@ -73,7 +73,8 @@ const productDetails = async (product, category) => {
     details = await getProductDetails(product.ProductId);
     if (details) {
       generateJson({
-        Category: category,
+        CategoryName: category.CategoryName,
+        CategortImage: category.CategoryImageUrl3x,
         ProductDetails: details,
       });
     }
@@ -87,9 +88,8 @@ const generateAttributes = async () => {
   try {
     const { Categories } = await getCategoryTree();
 
-    // await iterateCategory(Categories);
+    await iterateCategory(Categories);
     // writeXML();
-    console.log(Categories);
   } catch (error) {
     console.error(error);
   }
@@ -97,5 +97,5 @@ const generateAttributes = async () => {
 
 generateAttributes();
 
-const port = "3005";
+const port = "3002";
 app.listen(port, () => console.log(`Listining on port ${port}...`));
