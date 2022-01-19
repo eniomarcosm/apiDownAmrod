@@ -16,13 +16,13 @@ let finalJson = {
     Product: [],
   },
 };
-let cont = 0;
 
+let cont = 0;
 const generateJson = (data) => {
   try {
     finalJson.DocumentElement.Product.push(data);
     writeXML();
-    console.log(cont++);
+    console.log("Added product number: ", ++cont);
   } catch (err) {
     console.error(err);
   }
