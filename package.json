@@ -14,8 +14,8 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15",
-    "dotenv": "^12.0.4"
+    "dotenv": "^14.2.0",
+    "nodemon": "^2.0.15"
   },
   "scripts": {
     "start": "nodemon app.js"

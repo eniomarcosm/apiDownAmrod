@@ -5,6 +5,9 @@ const fs = require("fs");
 
 const app = express();
 
+const port = "3000";
+app.listen(port, () => console.log(`Listining on port ${port}...`));
+
 const {
   getCategoryTree,
   getProductDetails,
@@ -23,7 +26,7 @@ const generateJson = (data) => {
   try {
     finalJson.DocumentElement.Product.push(data);
     writeXML();
-    console.log("Added product number: ", ++cont);
+    console.log("Product added: ", ++cont, "[x]");
   } catch (err) {
     console.error(err);
   }
@@ -55,12 +58,23 @@ const iterateCategory = async (categories) => {
   }
 };
 
-const categoryProducts = async (category) => {
+const categoryProducts = async (category, retries = 5, backoff = 300) => {
   let response;
   try {
     response = await getCategoryProducts(category.CategoryId);
-    for (const product of response.Products) {
-      await productDetails(product, category);
+    if (!response) {
+      setTimeout(() => {
+        console.error(
+          retries,
+          "Retrying product category: ",
+          category.CategoryId
+        );
+        return categoryProducts(category, retries - 1, backoff * 2);
+      }, backoff);
+    } else {
+      for (const product of response.Products) {
+        await productDetails(product, category);
+      }
     }
   } catch (err) {
     console.error(err);
@@ -68,11 +82,27 @@ const categoryProducts = async (category) => {
   return response;
 };
 
-const productDetails = async (product, category) => {
+let loaded = 0;
+const productDetails = async (
+  product,
+  category,
+  retries = 5,
+  backoff = 300
+) => {
   let details;
   try {
     details = await getProductDetails(product.ProductId);
-    if (details) {
+    if (!details) {
+      setTimeout(() => {
+        console.error(
+          retries,
+          "Retrying product details...",
+          product.ProductId
+        );
+        return productDetails(product, category, retries - 1, backoff * 2);
+      }, backoff);
+    } else {
+      console.log("Product Loaded:", ++loaded, "[ ]");
       generateJson({
         CategoryName: category.CategoryName,
         CategortImage: category.CategoryImageUrl3x,
@@ -87,9 +117,12 @@ const productDetails = async (product, category) => {
 
 const generateAttributes = async () => {
   try {
+    console.log("Loading categories...");
     const { Categories } = await getCategoryTree();
 
     await iterateCategory(Categories);
+    console.log("Finished");
+
     // writeXML();
   } catch (error) {
     console.error(error);
@@ -97,6 +130,3 @@ const generateAttributes = async () => {
 };
 
 generateAttributes();
-
-const port = "3002";
-app.listen(port, () => console.log(`Listining on port ${port}...`));
