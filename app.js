@@ -51,9 +51,7 @@ const writeXML = () => {
 
 const iterateCategory = async (categories) => {
   for (const category of categories) {
-    if (category.CategoryId) {
-      await categoryProducts(category);
-    }
+    if (category.CategoryId) categoryProducts(category);
     if (category.SubCategories) iterateCategory(category.SubCategories);
   }
 };
@@ -62,7 +60,7 @@ const categoryProducts = async (category, retries = 5, backoff = 300) => {
   let response;
   try {
     response = await getCategoryProducts(category.CategoryId);
-    if (!response) {
+    if (!response && retries > 0) {
       setTimeout(() => {
         console.error(
           retries,
@@ -73,7 +71,7 @@ const categoryProducts = async (category, retries = 5, backoff = 300) => {
       }, backoff);
     } else {
       for (const product of response.Products) {
-        await productDetails(product, category);
+        productDetails(product, category);
       }
     }
   } catch (err) {
@@ -92,7 +90,7 @@ const productDetails = async (
   let details;
   try {
     details = await getProductDetails(product.ProductId);
-    if (!details) {
+    if (!details && retries > 0) {
       setTimeout(() => {
         console.error(
           retries,
