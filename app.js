@@ -121,7 +121,7 @@ async function main() {
     console.log("Categories loaded successfully!");
 
     flatCategory(response.data.Body.Categories);
-    console.log("Caterories Tree in Flat...");
+    console.log("Categories Tree in Flat...");
 
     console.log("Generating Products...");
     generateProducts();
