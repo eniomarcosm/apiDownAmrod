@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const app = express();
 
-const port = "3000";
+const port = "3002";
 app.listen(port, () => console.log(`Listining on port ${port}...`));
 
 const {
@@ -21,22 +21,21 @@ let finalJson = {
   },
 };
 
+let errorProduct = {
+  ProductId: [],
+  CategoryId: [],
+};
+
 let cont = 0;
 const generateJson = (data) => {
   try {
     finalJson.DocumentElement.Product.push(data);
+    console.log("Product number: ", ++cont, "added[x]");
     writeXML();
-    console.log("Product added: ", ++cont, "[x]");
   } catch (err) {
     console.error(err);
   }
 };
-
-// const addToJson = (data) => {
-//   finalJson.DocumentElement.Product.push(data);
-//   console.log(finalJson);
-//   writeXML();
-// };
 
 const writeXML = () => {
   try {
@@ -49,82 +48,86 @@ const writeXML = () => {
   }
 };
 
-const iterateCategory = async (categories) => {
-  for (const category of categories) {
-    if (category.CategoryId) categoryProducts(category);
-    if (category.SubCategories) iterateCategory(category.SubCategories);
+const writeErrorJson = () => {
+  try {
+    var path = "./temp/errors.json";
+    fs.writeFileSync(path, JSON.stringify(errorProduct));
+  } catch (error) {
+    console.error(error);
   }
 };
 
-const categoryProducts = async (category, retries = 5, backoff = 300) => {
+const categoryProducts = async (categoryId) => {
   let response;
   try {
-    response = await getCategoryProducts(category.CategoryId);
-    if (!response && retries > 0) {
-      setTimeout(() => {
-        console.error(
-          retries,
-          "Retrying product category: ",
-          category.CategoryId
-        );
-        return categoryProducts(category, retries - 1, backoff * 2);
-      }, backoff);
-    } else {
-      for (const product of response.Products) {
-        productDetails(product, category);
-      }
+    response = await getCategoryProducts(categoryId);
+    if (!response.ok) {
+      errorProduct.CategoryId.push(categoryId);
+      writeErrorJson();
+      return;
     }
   } catch (err) {
     console.error(err);
   }
-  return response;
+  return response.data.Body.Products;
 };
 
-let loaded = 0;
-const productDetails = async (
-  product,
-  category,
-  retries = 5,
-  backoff = 300
-) => {
-  let details;
+const productDetails = async (productId) => {
+  let response;
   try {
-    details = await getProductDetails(product.ProductId);
-    if (!details && retries > 0) {
-      setTimeout(() => {
-        console.error(
-          retries,
-          "Retrying product details...",
-          product.ProductId
-        );
-        return productDetails(product, category, retries - 1, backoff * 2);
-      }, backoff);
-    } else {
-      console.log("Product Loaded:", ++loaded, "[ ]");
-      generateJson({
-        CategoryName: category.CategoryName,
-        CategortImage: category.CategoryImageUrl3x,
-        ProductDetails: details,
-      });
+    response = await getProductDetails(productId);
+    if (!response.ok) {
+      errorProduct.ProductId.push(productId);
+      writeErrorJson();
+      return;
     }
   } catch (error) {
     console.error(error);
   }
-  return details;
+  return response.data.Body;
 };
 
-const generateAttributes = async () => {
-  try {
-    console.log("Loading categories...");
-    const { Categories } = await getCategoryTree();
-
-    await iterateCategory(Categories);
-    console.log("Finished");
-
-    // writeXML();
-  } catch (error) {
-    console.error(error);
+let categoryTreeFlat = [];
+const flatCategory = async (categories) => {
+  for (const category of categories) {
+    if (category.SubCategories.length) flatCategory(category.SubCategories);
+    else {
+      categoryTreeFlat.push(category);
+      writeErrorJson();
+    }
   }
 };
 
-generateAttributes();
+const generateProducts = async () => {
+  for (const category of categoryTreeFlat) {
+    const products = await categoryProducts(category.CategoryId);
+    if (Array.isArray(products) && products.length) {
+      for (const product of products) {
+        const details = await productDetails(product.ProductId);
+        generateJson({
+          CategoryInfo: category,
+          ProductInfo: product,
+          ProductDetails: details,
+        });
+      }
+    }
+  }
+};
+
+async function main() {
+  try {
+    console.log("Loading category tree...");
+    const response = await getCategoryTree();
+    console.log("Categories loaded successfully!");
+
+    flatCategory(response.data.Body.Categories);
+    console.log("Caterories Tree in Flat...");
+
+    console.log("Generating Products...");
+    generateProducts();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+main();

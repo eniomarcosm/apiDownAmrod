@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "apisauce": "^2.1.5",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "xml-js": "^1.6.11"

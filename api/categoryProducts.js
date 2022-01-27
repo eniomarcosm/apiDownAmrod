@@ -11,7 +11,7 @@ const getCategoryProducts = async (categoryId) => {
   } catch (error) {
     console.error(error);
   }
-  return response.data.Body;
+  return response;
 };
 
 exports.getCategoryProducts = getCategoryProducts;

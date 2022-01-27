@@ -7,10 +7,10 @@ const getProductDetails = async (productId) => {
   try {
     response = await client.post(endpoint, { productId: productId });
   } catch (error) {
-    console.error(error);
+    console.error("Error", error);
   }
 
-  return response.data.Body;
+  return response;
 };
 
 exports.getProductDetails = getProductDetails;

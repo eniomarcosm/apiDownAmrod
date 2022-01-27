@@ -9,7 +9,7 @@ const getCategoryTree = async () => {
   } catch (error) {
     console.error(error);
   }
-  return response.data.Body;
+  return response;
 };
 
 exports.getCategoryTree = getCategoryTree;
