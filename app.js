@@ -22,7 +22,7 @@ let finalJson = {
 };
 
 let errorProduct = {
-  ProductId: [],
+  ProductCode: [],
   CategoryId: [],
 };
 
@@ -72,12 +72,12 @@ const categoryProducts = async (categoryId) => {
   return response.data.Body.Products;
 };
 
-const productDetails = async (productId) => {
+const productDetails = async (ProductCode) => {
   let response;
   try {
-    response = await getProductDetails(productId);
+    response = await getProductDetails(ProductCode);
     if (!response.ok) {
-      errorProduct.ProductId.push(productId);
+      errorProduct.ProductCode.push(ProductCode);
       writeErrorJson();
       return;
     }
@@ -90,25 +90,111 @@ const productDetails = async (productId) => {
 let categoryTreeFlat = [];
 const flatCategory = async (categories) => {
   for (const category of categories) {
+    categoryTreeFlat.push(category);
     if (category.SubCategories.length) flatCategory(category.SubCategories);
     else {
-      categoryTreeFlat.push(category);
+      // categoryTreeFlat.push(category);
       writeErrorJson();
     }
   }
 };
 
 const generateProducts = async () => {
+  let firstCategory = "";
   for (const category of categoryTreeFlat) {
     const products = await categoryProducts(category.CategoryId);
+    if (products.length === 0) {
+      firstCategory = category.CategoryName;
+    }
     if (Array.isArray(products) && products.length) {
       for (const product of products) {
-        const details = await productDetails(product.ProductId);
-        generateJson({
-          CategoryInfo: category,
-          ProductInfo: product,
-          ProductDetails: details,
-        });
+        const details = await productDetails(product.ProductCode);
+        // generateJson({
+        //   CategoryInfo: category,
+        //   ProductInfo: product,
+        //   ProductDetails: details,
+        // });
+
+        const getImageLink = (colourCode, imageType) => {
+          const Images = details.Images;
+          for (const image of Images) {
+            if (
+              image.VariantColourCode === colourCode &&
+              image.ImageType === imageType
+            ) {
+              return image.ImageUrl3x;
+            }
+          }
+        };
+
+        const StockLevel = details.StockLevel.Levels;
+
+        for (const stock of StockLevel) {
+          const data = {
+            SimpleCode: details.ProductCode,
+            ItemCode: stock.ItemCode,
+            Category: firstCategory,
+            SubCategory: category.CategoryName,
+            StockCheckCode: stock.ItemCode,
+            Description: details.ProductDescription,
+            Name: details.ProductName,
+            Price: details.Price,
+            ProductId: details.ProductId,
+            Size: stock.SizeCode,
+            Colour: stock.ColourCode,
+            Promotion: details.Promotion,
+            Gender: details.Gender,
+            GenderMatch: details.GenderOtherCode,
+            Behavior: details.Behavior,
+            InStock: stock.InStock,
+            ColourName: stock.ColourName,
+            Reserved: stock.Reserved,
+            IsWorkewear: details.IsWorkewear,
+            IsEssetial: details.IsEssetial,
+            ImageCategory: product.ImageUrl3x,
+            // ImageDefault: `https://productcatalogue2020.s3.amazonaws.com/${stock.ItemCode}-${stock.ColourCode}-MOFR01_460_350.jpg`,
+            ImageColorAditional: getImageLink(stock.ColourCode, "additional"),
+            ImageColorDefault: getImageLink(stock.ColourCode, "defaultvariant"),
+
+            // Flags: product.Flags,
+            // IsSet: product.IsSet,
+            // IsComponentSet: product.IsComponentSet,
+            // Decoupled: product.Decoupled,
+            // IsComponent: product.IsComponent,
+          };
+
+          generateJson(data);
+        }
+        // for (const stock in details.StockLevel) {
+        //   console.log(stock.Levels);
+        // }
+        // console.log({
+        //   ItemCode: product.ProductCode,
+        //   Name: product.ProductName,
+        //   Description: product.ProductDescription,
+        //   Price: product.Price,
+        //   Flags: product.Flags,
+        //   SimpleCode: product.SimpleCode,
+        //   ProductId: product.ProductId,
+        //   Size: product.Size,
+        //   Colour: product.Colour,
+        //   Promotion: product.Promotion,
+        //   IsSet: product.IsSet,
+        //   IsComponentSet: product.IsComponentSet,
+        //   Behavior: product.Behavior,
+        //   InStock: product.InStock,
+        //   IsEssetial: product.IsEssetial,
+        //   Decoupled: product.Decoupled,
+        //   ColourName: product.ColourName,
+        //   StockCheckCode: product.StockCheckCode,
+        //   IsComponent: product.IsComponent,
+        //   IsWorkewear: product.IsWorkewear,
+
+        //   // Usefull for the future
+        //   CategoryInfo: category,
+        //   ProductInfo: product,
+        //   ProductDetails: details,
+        // });
       }
     }
   }
