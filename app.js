@@ -2,6 +2,7 @@ const express = require("express");
 const convert = require("xml-js");
 const path = require("path");
 const fs = require("fs");
+const _ = require("lodash");
 
 const app = express();
 
@@ -78,7 +79,6 @@ const productDetails = async (ProductCode) => {
     response = await getProductDetails(ProductCode);
     if (!response.ok) {
       errorProduct.ProductCode.push(ProductCode);
-      writeErrorJson();
       return;
     }
   } catch (error) {
@@ -87,24 +87,12 @@ const productDetails = async (ProductCode) => {
   return response.data.Body;
 };
 
-let categoryTreeFlat = [];
-const flatCategory = async (categories) => {
-  for (const category of categories) {
-    categoryTreeFlat.push(category);
-    if (category.SubCategories.length) flatCategory(category.SubCategories);
-    else {
-      // categoryTreeFlat.push(category);
-      writeErrorJson();
-    }
-  }
-};
-
 const generateProducts = async () => {
-  let firstCategory = "";
+  let firstCategory = [];
   for (const category of categoryTreeFlat) {
     const products = await categoryProducts(category.CategoryId);
     if (products.length === 0) {
-      firstCategory = category.CategoryName;
+      firstCategory.push(category.CategoryName);
     }
     if (Array.isArray(products) && products.length) {
       for (const product of products) {
@@ -200,17 +188,172 @@ const generateProducts = async () => {
   }
 };
 
+const iterateProdutos = async (category, subName) => {
+  const products = await categoryProducts(category?.CategoryId);
+  if (Array.isArray(products) && products.length) {
+    for (const product of products) {
+      try {
+        const details = await productDetails(product.ProductCode);
+        const images = details?.Images;
+        generateJson({
+          SimpleCode: product.ProductCode,
+          ItemCode: product.ProductCode,
+          Category: subName,
+          StockCheckCode: product.ProductCode,
+          Name: product.ProductName,
+          Gender: product.Gender,
+          Price: product.Price,
+          ProductId: product.ProductId,
+          Promotion: product.Promotion,
+          Image: Array.prototype.map
+            .call(images, function (item) {
+              return item.ImageUrl3x;
+            })
+            .join(",")
+            .split(",", 8)
+            .join(","),
+          Behavior: product.Behavior,
+          IsWorkwear: product.IsWorkwear,
+          IsEssential: product.IsEssential,
+        });
+
+        const StockLevel = details?.StockLevel?.Levels;
+        const getImageLink = (colourCode, imageType) => {
+          const Images = details?.Images;
+          for (const image of Images) {
+            if (
+              image?.VariantColourCode === colourCode &&
+              image?.ImageType === imageType
+            ) {
+              return image?.ImageUrl3x;
+            }
+          }
+        };
+        if (Array.isArray(StockLevel) && StockLevel.length) {
+          for (const stock of StockLevel) {
+            const data = {
+              SimpleCode: details.ProductCode,
+              ItemCode: stock.ItemCode,
+              Category: subName,
+              SubCategory: category.CategoryName,
+              StockCheckCode: stock.ItemCode,
+              Description: details.ProductDescription,
+              Name: details.ProductName,
+              Price: details.Price,
+              ProductId: details.ProductId,
+              Size: stock.SizeCode,
+              Colour: stock.ColourCode,
+              Promotion: details.Promotion,
+              Gender: details.Gender,
+              GenderMatch: details.GenderOtherCode,
+              Behavior: details.Behavior,
+              InStock: stock.InStock,
+              ColourName: stock.ColourName,
+              Reserved: stock.Reserved,
+              IsWorkwear: details.IsWorkwear,
+              IsEssential: details.IsEssential,
+              Image: getImageLink(stock?.ColourCode, "defaultvariant"),
+            };
+            generateJson(data);
+          }
+        }
+      } catch (error) {
+        console.log("->");
+      }
+    }
+  } else {
+    return;
+  }
+};
+
+const categoryCheck = (categories) => {
+  for (const category of categories) {
+    iterateProdutos(category, category?.CategoryName);
+
+    if (category?.SubCategories?.length) {
+      for (const subCategory of category?.SubCategories) {
+        const subName = `${category.CategoryName} | ${subCategory.CategoryName}`;
+        iterateProdutos(subCategory, subName);
+
+        if (subCategory?.SubCategories?.length) {
+          for (const subSubCategory of subCategory.SubCategories) {
+            const subSubName = `${subName} | ${subSubCategory.CategoryName}`;
+            iterateProdutos(subSubCategory, subSubName);
+
+            if (subSubCategory?.SubCategories?.length) {
+              for (const subSubSubCategory of subSubCategory.SubCategories) {
+                const subSubSubName = `${subSubName} | ${subSubSubCategory.CategoryName}`;
+                iterateProdutos(subSubSubCategory, subSubSubName);
+
+                if (subSubSubCategory?.SubCategories?.length) {
+                  for (const subSubSubSubCategory of subSubSubCategory?.SubCategories) {
+                    const subSubSubSubName = `${subSubSubName} | ${subSubSubSubCategory.CategoryName}`;
+                    iterateProdutos(subSubSubSubCategory, subSubSubSubName);
+
+                    if (subSubSubSubCategory?.SubCategories?.length) {
+                      for (const subSubSubSubSubCategory of subSubSubSubCategory?.SubCategories) {
+                        const subSubSubSubSubName = `${subSubSubSubName} | ${subSubSubSubSubCategory.CategoryName}`;
+                        iterateProdutos(
+                          subSubSubSubSubCategory,
+                          subSubSubSubSubName
+                        );
+
+                        if (subSubSubSubSubCategory?.SubCategories?.length) {
+                          for (const subSubSubSubSubSubCategory of subSubSubSubSubCategory?.SubCategories) {
+                            const subSubSubSubSubSubName = `${subSubSubSubSubName} | ${subSubSubSubSubSubCategory.CategoryName}`;
+                            iterateProdutos(
+                              subSubSubSubSubSubCategory,
+                              subSubSubSubSubSubName
+                            );
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  writeErrorJson();
+};
+
 async function main() {
   try {
     console.log("Loading category tree...");
     const response = await getCategoryTree();
+
     console.log("Categories loaded successfully!");
+    categoryCheck(response.data?.Body?.Categories);
 
-    flatCategory(response.data.Body.Categories);
-    console.log("Categories Tree in Flat...");
+    // const categorieGroups = [];
+    // walkProduct(response.data.Body.Categories, (category) => {
+    //   if (category.SubCategories.length) {
+    //     categorieGroups.push(category);
 
-    console.log("Generating Products...");
-    generateProducts();
+    //     console.log(
+    //       `${category.CategoryName} has ${category.SubCategories.length} subcategories`
+    //     );
+    //   }
+
+    //   console.log(`${category.CategoryName} products`);
+    // });
+    // console.log(response.data.Body.Categories);
+
+    // walk(response.data.Body.Categories, (category) => {
+    //   if (category.SubCategories.length) {
+    // flatCategory(category.SubCategories);
+    //     console.log(category.CategoryName);
+    //   }
+    // });
+    // flatCategory(response.data.Body.Categories);
+    // console.log("Categories Tree in Flat...");
+
+    // console.log("Generating Products...");
+    // generateProducts();
   } catch (error) {
     console.log(error);
   }
